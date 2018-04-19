@@ -34,6 +34,16 @@ public class AppUserRepositoryImpl implements AppUserRepository {
         return appUser;
     }
 
+    public AppUser findByEmployeeId(String employeeId) {
+        Query query = entityManager.createQuery("SELECT a FROM AppUser a WHERE a.employeeId = :employeeId");
+        query.setParameter("employeeId", employeeId);
+        AppUser appUser = null;
+        try {
+            appUser = (AppUser) query.getSingleResult();
+        } catch (NoResultException nre) {}
+        return appUser;
+    }
+
     public AppUser save(AppUser appUser) {
         entityManager.persist(appUser);
         return appUser;

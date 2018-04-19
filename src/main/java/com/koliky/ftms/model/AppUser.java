@@ -16,6 +16,7 @@ public class AppUser implements Serializable{
     @Temporal(TemporalType.TIMESTAMP)
     @DateTimeFormat(pattern = "dd/MM/yyyy hh:mm:ss")
     private Date createDate;
+    @Column(unique = true)
     private String employeeId;
     private String firstName;
     private String lastName;
@@ -27,6 +28,8 @@ public class AppUser implements Serializable{
     private Date startDate;
     private String email;
     private String phoneNumber;
+    private String imageProfile;
+    @Column(unique = true)
     private String username;
     private String password;
     private String address;
@@ -113,6 +116,14 @@ public class AppUser implements Serializable{
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getImageProfile() {
+        return imageProfile;
+    }
+
+    public void setImageProfile(String imageProfile) {
+        this.imageProfile = imageProfile;
     }
 
     public String getPhoneNumber() {

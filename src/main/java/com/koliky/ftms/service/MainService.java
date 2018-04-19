@@ -31,12 +31,13 @@ public class MainService {
         return BCrypt.hashpw(password, BCrypt.gensalt(12));
     }
 
-    public String createToken(AppUser appUser) {
+    public String createToken(AppUser appUser, List<String> roles) {
+
         return Jwts.builder().setSubject("token")
                 .claim("username", appUser.getUsername())
-                .claim("roles", appUser.getAppRoles())
+                .claim("roles", roles)
                 .setIssuedAt(new Date())
-                .setExpiration(DatePlusMinutes(60))
+                .setExpiration(DatePlusMinutes(60 * 24))
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
                 .compact();
     }

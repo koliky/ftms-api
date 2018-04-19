@@ -8,6 +8,7 @@ public interface AppUserRepository {
     List<AppUser> findAll();
     AppUser findById(Long id);
     AppUser findByUsername(String username);
+    AppUser findByEmployeeId(String employeeId);
     AppUser save(AppUser appUser);
     AppUser update(AppUser appUser);
 }

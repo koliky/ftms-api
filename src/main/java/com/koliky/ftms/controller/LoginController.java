@@ -2,7 +2,7 @@ package com.koliky.ftms.controller;
 
 import com.koliky.ftms.model.AppRole;
 import com.koliky.ftms.model.AppUser;
-import com.koliky.ftms.repository.AppUserRepository;
+import com.koliky.ftms.service.AppUserService;
 import com.koliky.ftms.service.MainService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +20,7 @@ import java.util.Set;
 public class LoginController {
 
     @Autowired
-    private AppUserRepository appUserRepository;
+    private AppUserService appUserService;
 
     @Autowired
     private MainService mainService;
@@ -52,7 +52,7 @@ public class LoginController {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST, headers = "Content-Type=Application/json")
     public LoginResponse login(@RequestBody final UserLogin userLogin) throws ServletException {
-        AppUser appUser = appUserRepository.findByUsername(userLogin.username);
+        AppUser appUser = appUserService.findByUsername(userLogin.username);
         if(appUser == null || !mainService.checkPassword(userLogin.password, appUser)) {
             throw new ServletException("Invalid login");
         }
@@ -61,14 +61,14 @@ public class LoginController {
             roles.add(appRole.getRoleName());
         }
         return new LoginResponse(
-                mainService.createToken(appUser),
+                mainService.createToken(appUser,roles),
                 appUser.getUsername(),
                 roles
         );
     }
 
     @RequestMapping(value = "/createuseradmin", method = RequestMethod.GET)
-    public ResultResponse createUserAdmin() throws ServletException, ParseException {
+    public ResultResponse createUserAdmin() throws ParseException {
         AppUser appUser = new AppUser();
         appUser.setCreateDate(new Date());
         appUser.setEmployeeId("00000");
@@ -80,6 +80,10 @@ public class LoginController {
         appUser.setStartDate(mainService.stringToDate("01/01/2011"));
         appUser.setChangePassword("NoChange");
         appUser.setUsername("admin");
+        appUser.setPhoneNumber("814");
+        appUser.setAddress("Amata");
+        appUser.setEmail("apichate@foamtecintl.com");
+        appUser.setImageProfile("admin.png");
         appUser.setPassword(mainService.hasPassword("adminpassword"));
         Set<AppRole> appRoleSet = appUser.getAppRoles();
         AppRole appRole = new AppRole();
@@ -88,7 +92,7 @@ public class LoginController {
         appRole.setAppUser(appUser);
         appRoleSet.add(appRole);
         appUser.setAppRoles(appRoleSet);
-        appUserRepository.save(appUser);
+        appUserService.save(appUser);
         return new ResultResponse("createUserAdmin");
     }
 }

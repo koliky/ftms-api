@@ -5,17 +5,14 @@ import io.jsonwebtoken.Jwts;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import io.jsonwebtoken.SignatureException;
 import org.springframework.stereotype.Service;
 
 @Service
-public class JwtFilter {
+public class JwtFilterService {
 
-    public Claims checkToken(ServletRequest request) throws ServletException {
-        final HttpServletRequest req = (HttpServletRequest) request;
-        final String authHeader = req.getHeader("Authorization");
-
+    public Claims checkToken(HttpServletRequest request) throws ServletException {
+        final String authHeader = request.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             throw new ServletException("Missing or invalid Authorization header.");
         }
